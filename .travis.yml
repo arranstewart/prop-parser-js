@@ -1,0 +1,22 @@
+sudo: false
+language: node_js
+node_js:
+- '8'
+
+script:
+- npm test
+- npm pack
+
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: Vo+s9Vlaiavenpp8ik7VeT5/AR4H/IClgQ16dKy8wviEKy4Ytcu2EGEUtA8KjkI9OVBISiDzcv7ES2KYINd1VLer7ifMxg4bwmajYHti/8Xx3cHp63HRQxMwUuT9g5aWKQPzeE49/DijrQgf089Q1ObcswlO+h4cPLmtejLKAIAV/AnhMy2mbv9+IgmX4h4r1cmn/19NPCe5uVuo3LgwBOY2hhvCW2v9xh7cURRW6u3y23gF2RwcILpHTFhGlAHrJHbbvBoae+T2py8uDLVgLMYxWPylnHRIDzHsVf6r3johzqIlUwbZ1Ed3fQ9miUdvg2jX7jCVh37ztUSCFy/12Y9zGoH3MRLR/HZEiyfx/t8W/El31XilqNBcLhXeyxOtWcbQ7YXQsF3jDSaiCYvMxD7Q6tlX7jbKOI35FueMQSddC9i75dHMcvLrtB8CDA0TOEAZL87rjY+6edlb5+uCGUfe0d2RTXCQP4e0ZXWvGDZt46ylqCVR6CcqjBgFsfDGgOJtp6ynBFaVTV2PdA8TlDdwdfrjmE6QUzXlKomrJMPRMcq82/g2c6dDCuCqebkRzsdG6Vt851g2/xgF7z7DJw+juT9l0o45zLpsDvw5Zz9Ixb+C9t1khwKyEO9F8mdqyV0c5w6kILzbeUP9WDDH/jHSbazBAamIDGurUpmkJac=
+  file: 
+  - prop-parser-0.1.0.tgz
+  - dist/prop-parser.js  
+  - dist/prop-parser.min.js
+  on:
+    repo: arranstewart/prop-parser-js
+    tags: true
