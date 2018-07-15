@@ -1,4 +1,4 @@
-[![Build](https://travis-ci.org/arranstewart/urban-pancake.svg?branch=master)](https://travis-ci.org/arranstewart/urban-pancake)
+[![Build](https://travis-ci.org/arranstewart/prop-parser-js.svg?branch=master)](https://travis-ci.org/arranstewart/urban-pancake)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 ## structure
