@@ -1,0 +1,39 @@
+{
+  "name": "prop-parser",
+  "version": "0.1.0",
+  "description": "parse propositional logic formulas",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha test/**/**.spec.js",
+    "prepare": "coffee -o lib -c src/proptypes.coffee && nearleyc -o lib/propgrammar.js src/propgrammar.ne && browserify ./src/exports.js > dist/prop-parser.js && browserify ./src/exports.js  | uglifyjs --compress > dist/prop-parser.min.js",
+    "standard": "standard"
+  },
+  "author": "arran d. stewart",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^16.2.2",
+    "chai": "^4.1.2",
+    "coffee-script": "^1.12.7",
+    "jsverify": "^0.8.3",
+    "mocha": "^5.2.0",
+    "standard": "^8.6.0",
+    "uglify-es": "^3.3.9"
+  },
+  "dependencies": {
+    "moo": "^0.4.3",
+    "nearley": "^2.13.0"
+  },
+  "bundledDependencies": [
+    "moo",
+    "nearley"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arranstewart/prop-parser-js.git"
+  },
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run standard"
+    }
+  }
+}

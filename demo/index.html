@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>prop-parser demo</title>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="../dist/prop-parser.js"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/themes/default/style.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.3.3/jstree.min.js"></script>
+</head>
+<body class="container">
+	<h1>Example</h1>
+    <div id="div1">
+    </div>
+    <div>
+      <p id="json-container">As <a href="#">JSON</a>
+      </p>
+      <p id="json-content" style="display:none; border: inset gray 4px; padding: 4pt; ">
+      </p>
+
+    </div>
+
+
+<script>
+
+
+  $(function () {
+
+      var d = $("#div1");
+      var str = "A <-> B -> C -> D ^ (A v ~~B)";
+      d.append("<p> parsing string: '<code>" + str + "</code>'</p>");
+      var res =  parse(str) ;
+      d.append("<p> result text: <code>" + res.text + "<code></p>");
+
+      d.append("As jstree:<br>");
+
+      d.append( $("<div>").jstree({
+          plugins : ["wholerow"],
+          'core' : {
+              'data' : res 
+          }
+      }) );
+
+      $("#json-content").append(
+        "<p class='json'>result JSON: <pre>" + 
+        JSON.stringify(res, null, 2) + 
+        "<pre></p>"
+      );
+
+      $("#json-container").click( () => {
+          $("#json-content").slideToggle(200);
+      });
+
+      //d.append("<p class='json'>result JSON: <pre>" + JSON.stringify(res, null, 2) + "<pre></p>");
+
+
+      //$("<br>As <a href='#'>JSON</a>").click( function(){
+      //  $('.json').slideToggle("fast");
+      //});
+
+
+
+
+  });
+
+</script>
+
+
+</html>
