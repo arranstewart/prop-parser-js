@@ -5,7 +5,6 @@ const moo = require("moo");
 
 const lexer = moo.compile({
       WS:      { match: /[ \t\n\r]+/, lineBreaks: true },
-      number:  /0|[1-9][0-9]*/,
       //string:  /"(?:\\["\\]|[^\n"\\])*"/,
       lparen:  '(',
       rparen:  ')',
@@ -13,8 +12,9 @@ const lexer = moo.compile({
       and: '^',
       not: '~',
       or: 'v',
-      bicond: '<->',
-      impl: '->'
+      lAngle: '<',
+      rAngle: '>',
+      hyphen: '-'
     });
 
 %}
@@ -23,6 +23,11 @@ const lexer = moo.compile({
 
 @builtin "whitespace.ne" # `_` means arbitrary amount of whitespace
 @builtin "number.ne"     # `int`, `decimal`, and `percentage` number primitives
+
+
+bicondOp -> %lAngle %hyphen %rAngle
+ 
+implOp -> %hyphen %rAngle
 
 # to get correct precedences, we do the "chaining" thing.
 # biconditional has the lowest precedence, and is
@@ -35,12 +40,12 @@ const lexer = moo.compile({
 logExpr -> logBiCondExpr
                    {% ([x]) => x  %}
 
-logBiCondExpr -> logBiCondExpr _ %bicond _ logImplExpr
+logBiCondExpr -> logBiCondExpr _ bicondOp _ logImplExpr
                   {% ([l, , , , r]) => new prop.BiCondProp(l,r)  %}
                 | logImplExpr
                   {% ([x]) => x  %}
 
-logImplExpr -> logImplExpr _ %impl _ logOrExpr
+logImplExpr -> logImplExpr _ implOp _ logOrExpr
                   {% ([l, , , , r]) => new prop.ImplProp(l,r)  %}
                 | logOrExpr
                   {% ([x]) => x  %}
@@ -66,9 +71,3 @@ logAtomExpr -> %atom {% ([x]) => new prop.AtomicProp(x.text) %}
         | %lparen _ logExpr _ %rparen
                    {% ([ , ,x, , ]) => x  %}
               
-
-                
-
-
-
-
