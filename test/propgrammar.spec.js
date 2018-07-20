@@ -26,6 +26,12 @@ function doesParse (s) {
 
 
 const expected_results = [
+  [ 'A',        new AtomicProp('A') ],
+
+  [ '(A)',      new AtomicProp('A') ],
+
+  [ '( (A))',   new AtomicProp('A') ],
+
   [ 'A ^ B',    new AndProp( 
                     new AtomicProp('A'),
                     new AtomicProp('B')
@@ -35,6 +41,18 @@ const expected_results = [
                     new AtomicProp('A'),
                     new AtomicProp('B')
                   ) ],
+
+
+  [ 'A -> B',   new ImplProp( 
+                  new AtomicProp('A'),
+                  new AtomicProp('B')
+                ) ],
+
+  [ 'A <-> B',  new BiCondProp( 
+                  new AtomicProp('A'),
+                  new AtomicProp('B')
+                ) ],
+
 
   [ '(~(~(G)))',  new NotProp(
                     new NotProp(
@@ -241,25 +259,29 @@ const moreArbs = jsc.letrec(function (tie) {
 
 const arbProp = moreArbs["prop"];
 
+// props including 'not'.
+// we can parse but not round-trip them
+const complexArbs = jsc.letrec(function (tie) {
+  return {
+    atom: arbUpperChar,
+    biProp: mkCompoundProp(tie('prop')),
+    notProp: mkNotProp(tie('prop')),
 
+    prop: weightedOneof([ [tie('atom'), 3],
+                           [tie('biProp'), 1]
+                           [tie("notProp"),1]
+    ])
 
+  }
+})
+
+const arbComplexProp = complexArbs["prop"];
 
 // tests
 
 
 describe('prop-parser', () => {
   describe('parse', () => {
-
-
-    it('should parse AND', () => {
-
-      var res = parser.parse('A ^ B');
-      var expected = new AndProp( 
-        new AtomicProp('A'),
-        new AtomicProp('B')
-      );
-      expect( res ).to.deep.equal(expected);
-    }),
 
 
     describe('should fail on bad strings', () => {
@@ -291,14 +313,24 @@ describe('prop-parser', () => {
 
     describe('successfully parses ...',()=>{
 
-      jsc.property("single atoms", arbUpperChar, (c) => doesParse(c) );
+      jsc.property("single atoms", arbUpperChar, (c) => doesParse(c) )
 
       jsc.property("1-connective formulas", arbSmallProp, (c) => doesParse(c) );
-      jsc.property("abritrary props with no not", arbProp, (s) => 
+      jsc.property("arbitrary props with no not", arbProp, (s) => 
         doesParse(s)   
       );
 
-    }),
+      //jsc.property("abritrary props with not", arbComplexProp, (s) => {
+      //  var res = (s == null) || doesParse(s);
+      //  if (s == null) {
+      //    console.log("s was null");
+      //  } else {
+      //    console.log("s was not null" + JSON.stringify( [s] ) );
+      //  }
+      //  return res;
+      //});
+
+    })
 
     // only handles props w no not.
     describe('no-not props should roundtrip (modulo whitespace)',()=>{
